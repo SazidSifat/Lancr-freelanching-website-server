@@ -21,7 +21,7 @@ const client = new MongoClient(uri, {
 
 async function run() {
     try {
-        await client.connect();
+        // await client.connect();
 
         const taskCollection = client.db("taskDb").collection("tasks")
 
@@ -31,16 +31,16 @@ async function run() {
             res.send(result)
         })
 
-        app.post('/addtask', async (req, res) => {
-            const data = req.body
-            const result = await taskCollection.insertOne(data)
+
+        app.get('/feature-task', async (req, res) => {
+            const result = await taskCollection.find().sort({ deadline: 1 }).limit(6).toArray()
             res.send(result)
         })
 
 
         app.get('/all-task', async (req, res) => {
             const result = await taskCollection.find().toArray()
-            console.log(result);
+            
             res.send(result)
         })
 
@@ -48,7 +48,6 @@ async function run() {
             const id = req.params.id
             const query = { _id: new ObjectId(id) };
             const result = await taskCollection.findOne(query)
-            console.log(result);
             res.send(result)
         })
 
@@ -58,10 +57,19 @@ async function run() {
             res.send(result)
         })
 
+        app.delete('/delete/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await taskCollection.deleteOne(query)
+            res.send(result)
+        })
 
 
-        await client.db("admin").command({ ping: 1 });
-        console.log("Pinged your deployment. You successfully connected to MongoDB!");
+
+
+
+        // await client.db("admin").command({ ping: 1 });
+        // console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
 
 
