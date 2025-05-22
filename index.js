@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const express = require('express');
 const cors = require('cors');
 const app = express()
@@ -23,11 +23,39 @@ async function run() {
     try {
         await client.connect();
 
-        app.post('/addtask', (req, res) => {
+        const taskCollection = client.db("taskDb").collection("tasks")
 
+        app.post('/addtask', async (req, res) => {
             const data = req.body
-            console.log(data);
+            const result = await taskCollection.insertOne(data)
+            res.send(result)
+        })
 
+        app.post('/addtask', async (req, res) => {
+            const data = req.body
+            const result = await taskCollection.insertOne(data)
+            res.send(result)
+        })
+
+
+        app.get('/all-task', async (req, res) => {
+            const result = await taskCollection.find().toArray()
+            console.log(result);
+            res.send(result)
+        })
+
+        app.get('/all-task/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: new ObjectId(id) };
+            const result = await taskCollection.findOne(query)
+            console.log(result);
+            res.send(result)
+        })
+
+        app.get('/my-task/:email', async (req, res) => {
+            const userEmail = req.params.email;
+            const result = await taskCollection.find({ userEmail }).toArray()
+            res.send(result)
         })
 
 
@@ -40,14 +68,6 @@ async function run() {
     }
 }
 run().catch(console.dir);
-
-
-
-  app.get('/', (req, res) => {
-
-            res.send("hello")
-
-        })
 
 
 
