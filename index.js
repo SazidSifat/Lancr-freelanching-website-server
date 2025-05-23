@@ -40,7 +40,7 @@ async function run() {
 
         app.get('/all-task', async (req, res) => {
             const result = await taskCollection.find().toArray()
-            
+
             res.send(result)
         })
 
@@ -51,9 +51,39 @@ async function run() {
             res.send(result)
         })
 
+        app.patch('/all-task/:id', async (req, res) => {
+            const id = req.params.id;
+            const updateData = req.body;
+            const query = { _id: new ObjectId(id) }
+            const doc = { $set: updateData }
+            const result = await taskCollection.updateOne(query, doc)
+            res.send(result)
+
+        })
+
+       
+
         app.get('/my-task/:email', async (req, res) => {
             const userEmail = req.params.email;
             const result = await taskCollection.find({ userEmail }).toArray()
+            res.send(result)
+        })
+
+        app.put('/update-my-task/:id', async (req, res) => {
+            const id = req.params.id
+            const { title, category, deadline, budget, description } = req.body;
+            const query = { _id: new ObjectId(id) }
+            const option = { upsert: true }
+            const updateDoc = {
+                $set: {
+                    title,
+                    category,
+                    deadline,
+                    budget,
+                    description
+                }
+            };
+            const result = await taskCollection.updateOne(query, updateDoc, option)
             res.send(result)
         })
 
@@ -63,6 +93,9 @@ async function run() {
             const result = await taskCollection.deleteOne(query)
             res.send(result)
         })
+
+
+
 
 
 
