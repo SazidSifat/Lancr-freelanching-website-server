@@ -21,7 +21,6 @@ const client = new MongoClient(uri, {
 
 async function run() {
     try {
-        
 
         const taskCollection = client.db("taskDb").collection("tasks")
 
@@ -38,7 +37,6 @@ async function run() {
 
         app.get('/all-task', async (req, res) => {
             const result = await taskCollection.find().toArray()
-
             res.send(result)
         })
 
