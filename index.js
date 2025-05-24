@@ -21,7 +21,7 @@ const client = new MongoClient(uri, {
 
 async function run() {
     try {
-        // await client.connect();
+        
 
         const taskCollection = client.db("taskDb").collection("tasks")
 
@@ -31,12 +31,10 @@ async function run() {
             res.send(result)
         })
 
-
         app.get('/feature-task', async (req, res) => {
             const result = await taskCollection.find().sort({ deadline: 1 }).limit(6).toArray()
             res.send(result)
         })
-
 
         app.get('/all-task', async (req, res) => {
             const result = await taskCollection.find().toArray()
@@ -60,8 +58,6 @@ async function run() {
             res.send(result)
 
         })
-
-       
 
         app.get('/my-task/:email', async (req, res) => {
             const userEmail = req.params.email;
@@ -94,15 +90,6 @@ async function run() {
             res.send(result)
         })
 
-
-
-
-
-
-
-
-        // await client.db("admin").command({ ping: 1 });
-        // console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
 
 
