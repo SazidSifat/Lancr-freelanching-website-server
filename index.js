@@ -31,12 +31,12 @@ async function run() {
         })
 
         app.get('/feature-task', async (req, res) => {
-            const result = await taskCollection.find().sort({ deadline: 1 }).limit(6).toArray()
+            const result = await taskCollection.find().sort({ deadline: 1 }).limit(8).toArray()
             res.send(result)
         })
 
         app.get('/all-task', async (req, res) => {
-            const result = await taskCollection.find().toArray()
+            const result = await taskCollection.find().sort({ title: 1 }).toArray()
             res.send(result)
         })
 
